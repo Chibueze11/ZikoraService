@@ -25,7 +25,7 @@ namespace ZikoraService.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto login)
         {
-            var result = await _customerService.LoginAsync(login.Email.ToString(), login.Password.ToString());
+            var result = await _customerService.LoginAsync(login);
             return Ok(result);
         }
     }

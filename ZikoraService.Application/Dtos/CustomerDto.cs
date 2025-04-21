@@ -7,21 +7,31 @@ namespace ZikoraService.Application.Dtos
     {
         [JsonPropertyName("email")]
         public string Email { get; set; }
+
         [JsonPropertyName("password")]
         public string Password { get; set; }
+
+        [JsonPropertyName("device_id")]
+        public string DeviceId {  get; set; }
+
+        [JsonPropertyName("device_type")]
+        public string DeviceType { get; set; }
+
+        [JsonPropertyName("device_name")]
+        public string DeviceName { get; set; }
 
     }
     public class CustomerDto
     {
         // Match exact property names from API documentation
         [JsonPropertyName("fName")]
-        public string FirstName { get; set; }  // Changed from FName to FirstName for better naming
+        public string FirstName { get; set; }  
 
         [JsonPropertyName("mName")]
-        public string? MiddleName { get; set; }  // Changed from MName to MiddleName
+        public string? MiddleName { get; set; }  
 
         [JsonPropertyName("lName")]
-        public string LastName { get; set; }  // Changed from LName to LastName
+        public string LastName { get; set; }  
 
         [JsonPropertyName("bvn")]
         public string BVN { get; set; }
@@ -63,7 +73,7 @@ namespace ZikoraService.Application.Dtos
         public string IDImageUrl { get; set; }
 
         [JsonPropertyName("dob")]
-        public DateTime DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
 
         [JsonPropertyName("docOne")]
         public string DocumentOne { get; set; }
@@ -82,5 +92,11 @@ namespace ZikoraService.Application.Dtos
 
         [JsonPropertyName("accountOfficerCode")]
         public string AccountOfficerCode { get; set; }
+    }
+
+    public class CustomerResponse
+    {
+        public string message { get; set; }
+        public string customerId { get; set; }
     }
 }

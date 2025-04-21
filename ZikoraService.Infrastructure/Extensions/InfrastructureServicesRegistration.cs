@@ -10,7 +10,6 @@ using ZikoraService.Infrastructure.Http;
 using ZikoraService.Infrastructure.Persistence.DbContext;
 using ZikoraService.Infrastructure.Persistence.Repositories;
 using ZikoraService.Infrastructure.Persistence.UnitOfWork;
-using static ZikoraService.Infrastructure.Http.RemoteHttpClient;
 
 namespace ZikoraService.Infrastructure.Extensions
 {
@@ -34,7 +33,7 @@ namespace ZikoraService.Infrastructure.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
      //     services.AddTransient<LoggingHandler>();
             services.AddSingleton<CircuitBreakerStateService>();
-     //     services.AddTransient<LoggingHandler>(); // This will automatically resolve ILogger<LoggingHandler>
+     //     services.AddTransient<LoggingHandler>();
         //  services.AddTransient<IRemoteHttpClient, RemoteHttpClient>();
 
 
@@ -55,7 +54,7 @@ namespace ZikoraService.Infrastructure.Extensions
 
             return services;
         }
-
+        #region helpers
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
         {
             return HttpPolicyExtensions
@@ -106,8 +105,10 @@ namespace ZikoraService.Infrastructure.Extensions
                         logger.LogInformation("Circuit breaker half-open");
                     });
         }
+        #endregion
     }
-     public static class PollyContextExtensions
+    #region classhelpers
+    public static class PollyContextExtensions
     {
         private const string LoggerKey = "ILogger";
 
@@ -140,4 +141,5 @@ namespace ZikoraService.Infrastructure.Extensions
             LastBreakTime = null;
         }
     }
+    #endregion
 }

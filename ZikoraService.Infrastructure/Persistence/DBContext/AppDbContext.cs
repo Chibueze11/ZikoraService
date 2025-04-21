@@ -14,7 +14,6 @@ namespace ZikoraService.Infrastructure.Persistence.DbContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // Fluent configurations can go here
         }
     }
 }
