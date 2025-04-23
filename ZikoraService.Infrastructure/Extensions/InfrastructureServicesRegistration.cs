@@ -31,10 +31,7 @@ namespace ZikoraService.Infrastructure.Extensions
             // Register services
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-     //     services.AddTransient<LoggingHandler>();
             services.AddSingleton<CircuitBreakerStateService>();
-     //     services.AddTransient<LoggingHandler>();
-        //  services.AddTransient<IRemoteHttpClient, RemoteHttpClient>();
 
 
             // Configure API settings

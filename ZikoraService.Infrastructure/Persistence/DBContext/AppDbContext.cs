@@ -7,13 +7,14 @@ namespace ZikoraService.Infrastructure.Persistence.DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Organization> Organizations { get; set; }
-        public DbSet<CorporateAccount> CorporateAccounts { get; set; }
+        public DbSet<Customer> Customer { get; set; }
+        public DbSet<Organization> Organization { get; set; }
+        public DbSet<CorporateAccount> CorporateAccount { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
         }
     }
 }

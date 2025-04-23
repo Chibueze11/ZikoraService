@@ -27,8 +27,14 @@ namespace ZikoraService.Infrastructure.Persistence.UnitOfWork
             return (IGenericRepository<T>)_repositories[type];
         }
 
-        public async Task<int> CompleteAsync() => await _context.SaveChangesAsync();
+        public async Task<int> CompleteAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
 
-        public void Dispose() => _context.Dispose();
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
     }
 }

@@ -10,56 +10,6 @@ using ZikoraService.Infrastructure.Extensions;
 
 namespace ZikoraService.Infrastructure.Http
 {
-    public class LoggingHandler : DelegatingHandler
-    {
-        private readonly ILogger<LoggingHandler> _logger;
-
-        public LoggingHandler(ILogger<LoggingHandler> logger)
-        {
-            _logger = logger;
-        }
-
-        protected override async Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            try
-            {
-                _logger.LogInformation("Sending request to {Method} {Uri}",
-                    request.Method, request.RequestUri);
-
-                if (request.Content != null)
-                {
-                    var requestBody = await request.Content.ReadAsStringAsync();
-                    _logger.LogDebug("Request body: {RequestBody}", requestBody);
-                }
-
-                var response = await base.SendAsync(request, cancellationToken);
-
-                _logger.LogInformation("Received response {StatusCode} from {Uri}",
-                    response.StatusCode, request.RequestUri);
-
-                if (!response.IsSuccessStatusCode && response.Content != null)
-                {
-                    var responseBody = await response.Content.ReadAsStringAsync();
-                    _logger.LogError("Error response body: {ResponseBody}", responseBody);
-                }
-
-                return response;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to send request to {Uri}", request.RequestUri);
-                throw;
-            }
-        }
-    }
-    public class ExternalApiSettings
-    {
-        public string BaseUrl { get; set; }
-        public int TimeoutInSeconds { get; set; }
-        public int MaxRetryAttempts { get; set; }
-        public int RetryDelayInSeconds { get; set; }
-    }
     public class RemoteHttpClient : IRemoteHttpClient
     {
         private readonly FlurlClient flurlClient;
@@ -71,7 +21,7 @@ namespace ZikoraService.Infrastructure.Http
         public RemoteHttpClient(
     ILogger<RemoteHttpClient> logger,
     CircuitBreakerStateService circuitState,
-    LoggingHandler loggingHandler,  
+    LoggingHandler loggingHandler,
     IOptions<ExternalApiSettings> apiSettings)
         {
             _logger = logger;
@@ -138,73 +88,11 @@ namespace ZikoraService.Infrastructure.Http
                 throw;
             }
         }
-        //    public async Task<string> PostAsync(string endpoint, object payload)
-        //    {
-        //        try
-        //        {
-        //            var jsonPayload = JsonConvert.SerializeObject(payload);
-        //            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-        //            // Get the full HttpResponseMessage
-        //            HttpResponseMessage response = await _httpClient.PostAsync(endpoint, content);
+    
 
-        //            // Read the response content
-        //            string responseContent = await response.Content.ReadAsStringAsync();
-
-        //            if (!response.IsSuccessStatusCode)
-        //            {
-        //                throw new HttpRequestException(
-        //                    $"API request failed with status code {response.StatusCode}. Response: {responseContent}");
-        //            }
-
-        //            return responseContent;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            _logger.LogError(ex, "Failed to execute POST request to {Endpoint}", endpoint);
-        //            throw;
-        //        }
-        //    }
-        //}
-
-        private class DelegatingHandlerChain : DelegatingHandler
-        {
-            public DelegatingHandlerChain(params DelegatingHandler[] handlers)
-            {
-                for (int i = 0; i < handlers.Length - 1; i++)
-                {
-                    handlers[i].InnerHandler = handlers[i + 1];
-                }
-                InnerHandler = handlers.LastOrDefault()?.InnerHandler ?? new HttpClientHandler();
-            }
-        }
-      
-        public class ServiceUnavailableException : Exception
-        {
-            public ServiceUnavailableException() : base() { }
-            public ServiceUnavailableException(string message) : base(message) { }
-            public ServiceUnavailableException(string message, Exception inner) : base(message, inner) { }
-        }
-   
-        //public class CircuitBreakerStateService
-        //{
-        //    public bool IsCircuitBroken { get; private set; }
-        //    public DateTime? LastBreakTime { get; private set; }
-        //    public int FailureCount { get; private set; }
-
-        //    public void OnBreak()
-        //    {
-        //        IsCircuitBroken = true;
-        //        LastBreakTime = DateTime.UtcNow;
-        //        FailureCount++;
-        //    }
-
-        //    public void OnReset()
-        //    {
-        //        IsCircuitBroken = false;
-        //        LastBreakTime = null;
-        //        FailureCount = 0;
-        //    }
-        // }
     }
+
+    
+
 }

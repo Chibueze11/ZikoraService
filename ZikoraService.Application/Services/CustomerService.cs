@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using ZikoraService.Application.Contracts;
 using ZikoraService.Application.Dtos;
+using ZikoraService.Domain.Entities;
 using ZikoraService.Infrastructure.Http;
 using ZikoraService.Infrastructure.Persistence.UnitOfWork;
 
@@ -69,33 +71,39 @@ namespace ZikoraService.Application.Services
                     accountOfficerCode = customerDto.AccountOfficerCode
                 };
 
-                string requestUrl = $"{_apiSettings.Value.BaseUrl}/auth/create-customer";
+                string requestUrl= "https://zikora-node.herokuapp.com/zikora-api/v1/auth/create-customer";
+               // string requestUrl = $"{_apiSettings.Value.BaseUrl}/auth/create-customer";
                 _logger.LogInformation("Resolved Zikora URL: {Url}", requestUrl);
                 _logger.LogInformation("Calling Zikora API at {Url} with Payload: {Payload}", requestUrl, JsonConvert.SerializeObject(requestPayload));
                 var response = await _httpClient.PostJSON<dynamic>(requestUrl, requestPayload);
 
-              _unitOfWork.Repository<CustomerDto>().AddAsync(response);
+                var customerEntity = _mapper.Map<Customer>(customerDto);
+
+                await _unitOfWork.Repository<Customer>().AddAsync(customerEntity);
+                await _unitOfWork.CompleteAsync();
+
+
+                var customerId = response.GetProperty("customerId").GetString(); 
+                var message = response.GetProperty("message").GetString();
+
                 return new CustomerResponse
                 {
-                    customerId = response.CustomerId,
-                    message = response.Message,
+                    customerId = customerId,
+                    message = message,
                 };
 
-                // Use PostJSON with dynamic type to handle the response
-              //dynamic response = await _httpClient.PostJSON<dynamic>("auth/create-customer", requestPayload);
-                // Return the customerId from the response
-                
+               
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create customer");
                 return new CustomerResponse
                 {
-                    message = $"{ex.Message}\n  An error occurred while creating the customer"
+                    message = $"{ex.Message} An error occurred while creating the customer"
                 };
             }
         }
-        public async Task<string> LoginAsync(LoginDto loginDto)
+        public async Task<AuthResponse> LoginAsync(LoginDto loginDto)
         {
             var payload = new
             {
@@ -106,12 +114,31 @@ namespace ZikoraService.Application.Services
                 device_name = loginDto.DeviceName
             };
 
-            string requestUrl = $"{_apiSettings.Value.BaseUrl}/auth/create-customer";
+            string requestUrl = "https://zikora-node.herokuapp.com/zikora-api/v1/authenticate";
             _logger.LogInformation("Resolved Zikora URL: {Url}", requestUrl);
-            _logger.LogInformation("Calling Zikora API at {Url} with payload: {payload}", requestUrl, JsonConvert.SerializeObject(payload));
-            var response = await _httpClient.PostJSON<dynamic>(requestUrl, payload);
-            //ar response = await _httpClient.PostAsync("authenticate", payload);
-            return null;
+            _logger.LogInformation("Calling Zikora API at {Url} with payload: {Payload}", requestUrl, JsonConvert.SerializeObject(payload));
+
+            try
+            {
+                var response = await _httpClient.PostJSON<AuthResponse>(requestUrl, payload);
+
+                if (response == null || string.IsNullOrEmpty(response.Token))
+                {
+                    _logger.LogWarning("Login failed or token missing.");
+                    return null;
+                }
+
+                _logger.LogInformation("Login successful. User ID: {UserId}, Token: {Token}", response.Auth?.Id, response.Token);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while calling the login API.");
+                throw;
+            }
         }
+
+
+
     }
 }
