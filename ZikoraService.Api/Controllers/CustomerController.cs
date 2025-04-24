@@ -15,7 +15,7 @@ namespace ZikoraService.Api.Controllers
             _customerService = customerService;
         }
 
-        [HttpPost("create")]
+        [HttpPost("create-customer")]
         public async Task<IActionResult> Create([FromBody] CustomerDto dto)
         {
             var result = await _customerService.CreateCustomerAsync(dto);

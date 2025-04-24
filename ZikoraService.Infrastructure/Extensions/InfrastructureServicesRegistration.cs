@@ -37,7 +37,6 @@ namespace ZikoraService.Infrastructure.Extensions
             // Configure API settings
             services.Configure<ExternalApiSettings>(configuration.GetSection("ExternalApi"));
 
-            // Remove any duplicate registrations and keep just this:
          services.AddTransient<LoggingHandler>();
             services.AddTransient<IRemoteHttpClient>(provider =>
             {
