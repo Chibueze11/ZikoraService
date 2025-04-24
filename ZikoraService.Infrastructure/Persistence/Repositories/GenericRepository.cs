@@ -27,6 +27,7 @@ namespace ZikoraService.Infrastructure.Persistence.Repositories
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
+        
         }
 
         public void Update(T entity)

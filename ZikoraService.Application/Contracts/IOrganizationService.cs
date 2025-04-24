@@ -4,6 +4,6 @@ namespace ZikoraService.Application.Contracts
 {
     public interface IOrganizationService
     {
-        Task<string> CreateOrganizationAsync(OrganizationDto org);
+        Task<ExecutionResult<OrganizationResponse>> CreateOrganizationAsync(OrganizationDto org);
     }
 }

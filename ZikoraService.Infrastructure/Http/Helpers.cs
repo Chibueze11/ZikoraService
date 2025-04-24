@@ -7,6 +7,16 @@ using Microsoft.Extensions.Logging;
 
 namespace ZikoraService.Infrastructure.Http
 {
+    public class ExternalApiSettings
+    {
+        public string BaseUrl { get; set; }
+        public int TimeoutInSeconds { get; set; }
+        public int MaxRetryAttempts { get; set; }
+        public int RetryDelayInSeconds { get; set; }
+    }
+
+
+    #region helpers
     internal class Helpers
     {
     }
@@ -53,13 +63,6 @@ namespace ZikoraService.Infrastructure.Http
             }
         }
     }
-    public class ExternalApiSettings
-    {
-        public string BaseUrl { get; set; }
-        public int TimeoutInSeconds { get; set; }
-        public int MaxRetryAttempts { get; set; }
-        public int RetryDelayInSeconds { get; set; }
-    }
 
 
     public class ServiceUnavailableException : Exception
@@ -79,4 +82,5 @@ namespace ZikoraService.Infrastructure.Http
             InnerHandler = handlers.LastOrDefault()?.InnerHandler ?? new HttpClientHandler();
         }
     }
+    #endregion
 }

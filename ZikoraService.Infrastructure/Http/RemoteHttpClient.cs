@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Polly.CircuitBreaker;
+using System.Dynamic;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
@@ -47,6 +49,7 @@ namespace ZikoraService.Infrastructure.Http
 
             flurlClient = new FlurlClient(httpClient);
         }
+
         public async Task<T> PostJSON<T>(string path, object payload = null, object headers = null, object cookies = null)
         {
             try
@@ -88,8 +91,38 @@ namespace ZikoraService.Infrastructure.Http
                 throw;
             }
         }
+        public async Task<T> Post<T>(string url, object data, Dictionary<string, string> headers = null)
+        {
+            try
+            {
+                var request = new FlurlRequest(url)
+                    .WithTimeout(TimeOut)
+                    .AllowHttpStatus("200-599");
 
-    
+                // Add headers exactly as received
+                if (headers != null)
+                {
+                    foreach (var header in headers)
+                    {
+                        request.WithHeader(header.Key, header.Value);
+                    }
+                }
+
+                var response = await request.PostJsonAsync(data);
+                var res = await response.GetJsonAsync<T>();
+                return res;
+            }
+            catch (FlurlHttpException ex)
+            {
+                var errorContent = await ex.GetResponseStringAsync();
+                _logger.LogError("API Error {Url}: {StatusCode} - {Error}",
+                    ex.Call.Request.Url,
+                    ex.StatusCode,
+                    errorContent);
+                throw;
+            }
+        }
+
 
     }
 

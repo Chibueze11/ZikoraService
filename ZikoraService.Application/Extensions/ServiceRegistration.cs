@@ -11,6 +11,8 @@ namespace ZikoraService.Application.Extensions
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<ICorporateAccountService, CorporateAccountService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddHttpContextAccessor();
             services.AddScoped<ZikoraRequestValidator>();
 
 
