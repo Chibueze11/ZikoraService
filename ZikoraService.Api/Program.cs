@@ -20,20 +20,9 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var dbContext = services.GetRequiredService<AppDbContext>(); 
-        dbContext.Database.Migrate();
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database");
-    }
-}
+await MiddlewareExtensions.ApplyMigrationsAsync(app.Services);
+
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseCustomMiddlewares();
