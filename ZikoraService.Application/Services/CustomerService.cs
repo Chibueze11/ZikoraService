@@ -39,7 +39,6 @@ namespace ZikoraService.Application.Services
         {
             try
             {
-                // Validate request
                 _validator.ValidateCustomerRequest(customerDto);
 
                 // formatted request payload
@@ -70,7 +69,7 @@ namespace ZikoraService.Application.Services
                     accountOfficerCode = customerDto.AccountOfficerCode
                 };
 
-              //  string requestUrl= "https://zikora-node.herokuapp.com/zikora-api/v1/auth/create-customer";
+                //  string requestUrl= "https://zikora-node.herokuapp.com/zikora-api/v1/auth/create-customer";
                 string requestUrl = $"{_apiSettings.Value.BaseUrl}/auth/create-customer";
 
                 _logger.LogInformation("Resolved Zikora URL: {Url}", requestUrl);
@@ -83,7 +82,7 @@ namespace ZikoraService.Application.Services
                 await _unitOfWork.CompleteAsync();
 
 
-                var customerId = response.GetProperty("customerId").GetString(); 
+                var customerId = response.GetProperty("customerId").GetString();
                 var message = response.GetProperty("message").GetString();
 
                 return new ExecutionResult<CustomerResponse>
@@ -96,8 +95,6 @@ namespace ZikoraService.Application.Services
                     },
                     Message = message
                 };
-
-
             }
             catch (Exception ex)
             {
@@ -112,7 +109,7 @@ namespace ZikoraService.Application.Services
                     },
                     Message = ex.Message
                 };
-              
+
             }
         }
         public async Task<ExecutionResult<AuthResponse>> LoginAsync(LoginDto loginDto)
@@ -137,7 +134,6 @@ namespace ZikoraService.Application.Services
                 var response = await _httpClient.PostJSON<AuthResponse>(requestUrl, payload);
 
                 _logger.LogInformation("Login successful. User ID: {UserId}, Token: {Token}", response.Auth?.Id, response.Token);
-
                 return new ExecutionResult<AuthResponse>
                 {
                     Response = ResponseCode.Ok,
