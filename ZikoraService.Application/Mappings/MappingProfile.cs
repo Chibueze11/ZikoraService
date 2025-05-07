@@ -17,6 +17,9 @@ namespace ZikoraService.Application.Mappings
                         opt => opt.MapFrom(src => src.DateOfBirth));
 
             CreateMap<OrganizationDto, Organization>().ReverseMap();
+            CreateMap<CreateVirtualAccountDto, VirtualAccount>().ReverseMap();
+            CreateMap<InitiatePaymentDto, VirtualAccountTransaction>().ReverseMap();
+            CreateMap<VerifyTransactionDto, VirtualAccountTransaction>().ReverseMap();
             CreateMap<CorporateAccountDto, CorporateAccount>().ReverseMap();
         }
     }

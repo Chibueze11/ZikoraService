@@ -10,6 +10,7 @@ namespace ZikoraService.Infrastructure.Persistence.DbContext
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Organization> Organization { get; set; }
         public DbSet<CorporateAccount> CorporateAccount { get; set; }
+        public DbSet<VirtualAccount> VirtualAccount { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

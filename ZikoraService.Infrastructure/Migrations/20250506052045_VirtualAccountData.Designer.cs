@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ZikoraService.Infrastructure.Persistence.DbContext;
@@ -12,9 +13,11 @@ using ZikoraService.Infrastructure.Persistence.DbContext;
 namespace ZikoraService.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250506052045_VirtualAccountData")]
+    partial class VirtualAccountData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,7 +80,7 @@ namespace ZikoraService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CorporateAccount", (string)null);
+                    b.ToTable("CorporateAccount");
                 });
 
             modelBuilder.Entity("ZikoraService.Domain.Entities.Customer", b =>
@@ -171,7 +174,7 @@ namespace ZikoraService.Infrastructure.Migrations
 
                     b.HasKey("MyCustomerKey");
 
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("ZikoraService.Domain.Entities.Organization", b =>
@@ -232,7 +235,7 @@ namespace ZikoraService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organization", (string)null);
+                    b.ToTable("Organization");
                 });
 
             modelBuilder.Entity("ZikoraService.Domain.Entities.VirtualAccount", b =>
@@ -265,7 +268,7 @@ namespace ZikoraService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VirtualAccount", (string)null);
+                    b.ToTable("VirtualAccount");
                 });
 #pragma warning restore 612, 618
         }

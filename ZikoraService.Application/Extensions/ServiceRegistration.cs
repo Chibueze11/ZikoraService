@@ -9,6 +9,7 @@ namespace ZikoraService.Application.Extensions
         public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
         {
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IVirtualAccountService, VirtualAccountService>();
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<ICorporateAccountService, CorporateAccountService>();
             services.AddScoped<ITokenService, TokenService>();
